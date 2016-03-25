@@ -16,6 +16,23 @@ A powerful, efficient, easy to use, funny JavaScript template engine.
   * **ES6: ES6 is supported**
   * Quick learning: Just 10 minutes from entry to proficient
   * Good compatibility: Compatible with all major browsers, IE, Firefox, Chrome, Safari etc
+  
+## Install
+```
+npm install nodetpl-plus --save
+```
+  
+## Usage
+
+```
+var NodeTplPlus = require('nodetpl-plus').default;
+// or
+//import NodeTplPlus from 'nodetpl-plus';
+
+var result = new NodeTplPlus({
+  library: 'commonjs'
+}).compile('template html code');
+```
 
 ### Detailed documentation
 

@@ -2,7 +2,7 @@
 
 import template from './template';
 
-let version = '1.2.2';
+let version = '1.2.3';
 
 class NodeTplPlus {
   constructor(options) {
