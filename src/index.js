@@ -2,7 +2,7 @@
 
 import template from './template';
 
-let version = '1.2.3';
+let version = '1.2.5';
 
 class NodeTplPlus {
   constructor(options) {
@@ -256,7 +256,7 @@ class NodeTplPlus {
       throw new Error('library option invalid: ' + this.options.library);
     }
     libs = cache.__libs || {};
-    if (['amd', 'cmd'].includes(this.options.library)) {
+    if (['amd', 'cmd'].indexOf(this.options.library) !== -1) {
       if (Array.isArray(libs._imports) && libs._imports.length > 0) {
         throw new Error('"import" was not supported on amd/cmd mode, you can use "require" instead.');
       }
