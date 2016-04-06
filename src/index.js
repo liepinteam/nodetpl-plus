@@ -2,7 +2,7 @@
 
 import template from './template';
 
-let version = '1.2.6';
+let version = '1.3.0';
 
 class NodeTplPlus {
   constructor(options) {
@@ -12,7 +12,7 @@ class NodeTplPlus {
     this.options = Object.assign({
       openTag: '<?',
       closeTag: '?>',
-      library: 'commonjs' // umd | amd | cmd | commonjs | var | es
+      library: 'commonjs' // umd | amd | cmd | commonjs | node | var | es
     }, options);
     return this;
   }
@@ -57,9 +57,11 @@ class NodeTplPlus {
       if (!htmlCode) {
         continue;
       }
-      htmlCode = htmlCode
-        .replace(cssExp, (all, code) => (cssCode += '\n' + code, ''))
-        .replace(jsExp, (all, code) => (jsCode += '\n' + code, ''));
+      if (this.options.library !== 'node') {
+        htmlCode = htmlCode
+          .replace(cssExp, (all, code) => (cssCode += '\n' + code, ''))
+          .replace(jsExp, (all, code) => (jsCode += '\n' + code, ''));
+      }
       cache[tplname] = {
         css: this._css(cssCode.trim(), tplname),
         html: this._html(htmlCode.trim(), tplname),

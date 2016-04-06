@@ -46,7 +46,7 @@ export default {
   render: data => new CoreClass().render(data)
 };`;
 
-template.commonjs = (tpls, scripts, libs) => `${libs._imports ? libs._imports.join('\n') + '\n' : ''}
+template.commonjs = template.node = (tpls, scripts, libs) => `${libs._imports ? libs._imports.join('\n') + '\n' : ''}
 ${libs._requires ? libs._requires.join('\n') + '\n' : ''}
 class CoreClass {
   constructor() {
