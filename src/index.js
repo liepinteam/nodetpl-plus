@@ -1,8 +1,9 @@
 'use strict';
 
 import template from './template';
+import css from './css';
 
-let version = '1.4.0';
+let version = '2.0.0';
 
 class NodeTplPlus {
   constructor(options) {
@@ -80,28 +81,13 @@ class NodeTplPlus {
    */
   _css(content, tplname) {
     if (content) {
-      content = content
-        .replace(/'/g, '\\\'')
-        .replace(/\/\*(.|\n)*?\*\/|\r?\n/ig, '')
-        .replace(/([a-zA-Z0-9_\-#*\.:\s,\(\)'"<>=]*)(\{)/ig, function(a, b, c) {
-          let sguid;
-          if (tplname === 'main') {
-            sguid = 'guid';
-          } else {
-            sguid = 'guid + duid';
-          }
-          b = b.trim();
-          if (b === '') {
-            return '#\' + ' + sguid + ' + \'' + c;
-          } else {
-            let _b = b.split(',');
-            for (let i = 0; i < _b.length; i++) {
-              _b[i] = _b[i].trim();
-              _b[i] = '\\n#\' + ' + sguid + ' + \'' + (_b[i].startsWith(':') ? '' : ' ') + _b[i];
-            }
-            return _b.join(',') + c;
-          }
-        });
+      let sguid;
+      if (tplname === 'main') {
+        sguid = 'guid';
+      } else {
+        sguid = 'guid + duid';
+      }
+      content = css(content, '#\' + ' + sguid + ' + \'', '$ROOT');
     }
     return content;
   }
@@ -273,5 +259,4 @@ class NodeTplPlus {
 }
 
 NodeTplPlus.version = version;
-
 export default NodeTplPlus;
