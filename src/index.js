@@ -3,7 +3,7 @@
 import template from './template';
 import css from './css';
 
-let version = '2.2.0';
+let version = '2.3.0';
 
 class NodeTplPlus {
   constructor(options) {
@@ -82,12 +82,13 @@ class NodeTplPlus {
   _css(content, tplname) {
     if (content) {
       let sguid;
+      let idname = '####SGUID####';
       if (tplname === 'main') {
         sguid = 'guid';
       } else {
         sguid = 'guid + duid';
       }
-      content = css(content, '#\' + ' + sguid + ' + \'', '$ROOT').replace(/\r?\n/g, '').replace(/'/g, '\\\'');
+      content = css(content, idname, '$ROOT').replace(/\r?\n/g, '').replace(/'/g, '\\\'').replace(new RegExp(idname, 'g'), '#\' + ' + sguid + ' + \'');
     }
     return content;
   }
