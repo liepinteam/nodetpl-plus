@@ -3,7 +3,7 @@
 import template from './template';
 import css from './css';
 
-let version = '2.0.0';
+let version = '2.1.0';
 
 class NodeTplPlus {
   constructor(options) {
@@ -87,7 +87,7 @@ class NodeTplPlus {
       } else {
         sguid = 'guid + duid';
       }
-      content = css(content, '#\' + ' + sguid + ' + \'', '$ROOT');
+      content = css(content, '#\' + ' + sguid + ' + \'', '$ROOT').replace(/\r?\n/g, '');
     }
     return content;
   }

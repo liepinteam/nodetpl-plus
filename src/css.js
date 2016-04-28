@@ -1,13 +1,12 @@
-import parser from 'css-parse';
-import stringify from 'css-stringify';
+import css from 'css';
 import traverse from 'traverse';
 
 export default function(content, namespace, ignore) {
-  var parsed = parser(content);
+  var parsed = css.parse(content);
   traverse.forEach(parsed, function(node) {
     if (this.key === 'selectors') {
       this.update(node.map(function(v) {
-        if(ignore && v.startsWith(ignore)) {
+        if (ignore && v.startsWith(ignore)) {
           v = v.replace(ignore, '');
           return namespace + v;
         } else {
@@ -16,5 +15,5 @@ export default function(content, namespace, ignore) {
       }));
     }
   });
-  return stringify(parsed);
+  return css.stringify(parsed);
 }
