@@ -3,7 +3,7 @@
 import template from './template';
 import css from './css';
 
-let version = '2.3.0';
+let version = '2.4.0';
 
 class NodeTplPlus {
   constructor(options) {
@@ -229,8 +229,8 @@ class NodeTplPlus {
       temp += '    return _;\n';
       temp += '  }.bind(this)';
       tpls.push(temp);
-      temp = '';
       if (cache[i].js) {
+        temp = '';
         temp += '  "' + i + '": function(guid, duid){\n';
         temp += 'const ROOT = document.getElementById(guid);\n';
         temp += 'const SUBROOT = document.getElementById(guid + duid);\n';
@@ -238,8 +238,8 @@ class NodeTplPlus {
         temp += 'var $DATA = this.datas[duid];\n';
         temp += cache[i].js;
         temp += '  }.bind(this)';
+        scripts.push(temp);
       }
-      scripts.push(temp);
     }
     if (!template[this.options.library]) {
       throw new Error('library option invalid: ' + this.options.library);
