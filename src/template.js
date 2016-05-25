@@ -30,11 +30,11 @@ class CoreClass {
   }
 
   duid() {
-    return '_tpl_d_' + this._generate();
+    return 'nodetpl_d_' + this._generate();
   }
 
   guid() {
-    return '_tpl_g_' + this._generate();
+    return 'nodetpl_g_' + this._generate();
   }
 
   render(data, guid) {
@@ -76,11 +76,11 @@ class CoreClass {
   }
 
   duid() {
-    return '_tpl_d_' + this._generate();
+    return 'nodetpl_d_' + this._generate();
   }
 
   guid() {
-    return '_tpl_g_' + this._generate();
+    return 'nodetpl_g_' + this._generate();
   }
 
   render(data, guid) {
@@ -122,11 +122,11 @@ template.amd = template.cmd = (tpls, scripts, libs) => `define(function(require,
     }
 
     duid() {
-      return '_tpl_d_' + this._generate();
+      return 'nodetpl_d_' + this._generate();
     }
 
     guid() {
-      return '_tpl_g_' + this._generate();
+      return 'nodetpl_g_' + this._generate();
     }
 
     render(data, guid) {
@@ -168,11 +168,11 @@ template.var = (tpls, scripts, libs) => `((nodetpl) => {
     }
 
     duid() {
-      return '_tpl_d_' + this._generate();
+      return 'nodetpl_d_' + this._generate();
     }
 
     guid() {
-      return '_tpl_g_' + this._generate();
+      return 'nodetpl_g_' + this._generate();
     }
 
     render(data, guid) {
