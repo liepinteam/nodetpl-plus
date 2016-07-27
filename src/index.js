@@ -3,7 +3,7 @@
 import template from './template';
 import css from './css';
 
-let version = '2.4.0';
+let version = '4.2.0';
 
 class NodeTplPlus {
   constructor(options) {
@@ -13,7 +13,16 @@ class NodeTplPlus {
     this.options = Object.assign({
       openTag: '<?',
       closeTag: '?>',
-      library: 'commonjs' // umd | amd | cmd | commonjs | node | var | es
+      library: 'commonjs', // umd | amd | cmd | commonjs | node | var | es
+      map: function(statements) {
+        return statements;
+      },
+      beforeCompile: function(html) {
+        return html;
+      },
+      afterCompile: function(html) {
+        return html;
+      }
     }, options);
     return this;
   }
@@ -38,10 +47,7 @@ class NodeTplPlus {
         return '';
       });
       if (list.main) {
-        cache.__libs = {
-          _imports: temp.match(/import\s+(?:.* from\s+)?(['"]).*\1\s*;/g),
-          _requires: temp.match(/require\s*\(\s*(['"]).*\1\s*\)\s*;/g)
-        };
+        cache.__libs = temp.trim();
       } else {
         list.main = html;
       }
@@ -129,28 +135,38 @@ class NodeTplPlus {
       };
       let openTag = getTag(this.options.openTag);
       let closeTag = getTag(this.options.closeTag);
-      let html = content.split(new RegExp('(' + openTag + '[\\s\\S]*?' + closeTag + ')'));
+      let html;
+      content = content.split(/<!--[\s\S]*-->/g).join(''); // annotation
+      html = content.split(new RegExp('(' + openTag + '[\\s\\S]*?' + closeTag + ')'));
       for (let i = 0; i < html.length; i++) {
         if (!html[i]) continue;
         let tagExp = new RegExp(openTag + '([\\s\\S]*?)' + closeTag, 'igm');
         if (tagExp.test(html[i])) {
           html[i] = html[i].replace(tagExp, '$1');
+          html[i] = this.options.map(html[i]); // use user map rules
           html[i] = html[i].replace(/@([a-zA-Z\$_]+)/igm, '$DATA.$1');
           html[i] = html[i].replace(/echo\s+(.*?);/igm, '    _ += $1 || \'\';\n');
           if (html[i].startsWith('=')) {
-            // 提取变量，判断是否 undefined
+            var eqhtml, safeeq = true;
+            // undefined or not
             html[i] = html[i].substring(1).trim();
+            if (html[i].startsWith('=')) {
+              // safeeq, safe html
+              safeeq = false;
+              html[i] = html[i].substring(1).trim();
+            }
+            eqhtml = safeeq ? '$NODETPL.escapeHtml(' + html[i] + ')' : '(' + html[i] + ')';
             if (!/^\d/.test(html[i])) {
               let vars = (/^(\(*)([a-zA-Z\d_\$\s\.]+)/.exec(html[i]) || [0, 0, ''])[2];
               if (vars !== '') {
                 html[i] = '    if (typeof ' + vars + ' !== \'undefined\') {\n' +
-                  '      _ += (' + html[i] + ');\n' +
+                  '      _ += (' + eqhtml + ');\n' +
                   '    }\n';
               } else {
-                html[i] = '    _ += (' + html[i] + ');\n';
+                html[i] = '    _ += (' + eqhtml + ');\n';
               }
             } else {
-              html[i] = '    _ += (' + html[i] + ');\n';
+              html[i] = '    _ += (' + eqhtml + ');\n';
             }
           }
         } else {
@@ -179,7 +195,11 @@ class NodeTplPlus {
    * @return {String}       content compiled
    */
   compile(html) {
-    return this._compile(this._fetch(html));
+    var result;
+    html = this.options.beforeCompile(html);
+    result = this._compile(this._fetch(html));
+    result = this.options.afterCompile(result);
+    return result;
   }
 
   /**
@@ -201,8 +221,8 @@ class NodeTplPlus {
       temp = '';
       temp += '  "' + i + '": function($DATA, guid){\n';
       temp += '    let _ = \'\';\n';
-      temp += '    let duid = this.duid();\n';
-      temp += '    guid = guid || this.guid();\n';
+      temp += '    let duid = $NODETPL.duid();\n';
+      temp += '    guid = guid || $NODETPL.guid();\n';
       if (cache[i].css) {
         temp += '    _ += \'<style>' + cache[i].css + '</style>\';\n';
       }
@@ -210,14 +230,14 @@ class NodeTplPlus {
         temp += cache[i].html;
       }
       temp += '    if($DATA){\n';
-      temp += '     this.datas[duid] = $DATA;\n';
+      temp += '     $NODETPL.datas[duid] = $DATA;\n';
       temp += '    }\n';
       if (cache[i].js) {
         temp += '    (function(scripts){\n';
         temp += '      let cache = typeof window !== \'undefined\' ? window : typeof global !== \'undefined\' ? global : {};\n';
         temp += '      cache._nodetpl_ = cache._nodetpl_ || {};\n';
         temp += '      cache._nodetpl_[guid + \'-\'+ duid] = scripts[\'' + i + '\'];\n';
-        temp += '    })(this.scripts);\n';
+        temp += '    })($NODETPL.scripts);\n';
         temp += '    _ += \'<script>\\n\';\n';
         temp += '    _ += \'(function(){\\n\';\n';
         temp += '    _ += \'  var cache = typeof window !== \\\'undefined\\\' ? window : typeof global !== \\\'undefined\\\' ? global : {};\\n\';\n';
@@ -234,8 +254,8 @@ class NodeTplPlus {
         temp += '  "' + i + '": function(guid, duid){\n';
         temp += 'const ROOT = document.getElementById(guid);\n';
         temp += 'const SUBROOT = document.getElementById(guid + duid);\n';
-        temp += 'var $TPLS = this.tpls;\n';
-        temp += 'var $DATA = this.datas[duid];\n';
+        temp += 'var $TPLS = $NODETPL.tpls;\n';
+        temp += 'var $DATA = $NODETPL.datas[duid];\n';
         temp += cache[i].js;
         temp += '  }.bind(this)';
         scripts.push(temp);
@@ -244,16 +264,7 @@ class NodeTplPlus {
     if (!template[this.options.library]) {
       throw new Error('library option invalid: ' + this.options.library);
     }
-    libs = cache.__libs || {};
-    if (['amd', 'cmd'].indexOf(this.options.library) !== -1) {
-      if (Array.isArray(libs._imports) && libs._imports.length > 0) {
-        throw new Error('"import" was not supported on amd/cmd mode, you can use "require" instead.');
-      }
-    } else if (this.options.library === 'var') {
-      if (Array.isArray(libs._imports) && libs._imports.length > 0 || Array.isArray(libs._requires) && libs._requires.length > 0) {
-        throw new Error('"import", "require" was not supported on var mode.');
-      }
-    }
+    libs = (cache.__libs || '').trim();
     html = template[this.options.library](tpls, scripts, libs);
     return html;
   }

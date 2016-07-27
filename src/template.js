@@ -1,7 +1,6 @@
 let template = {};
 
-template.es = (tpls, scripts, libs) => `${libs._imports ? libs._imports.join('\n') + '\n' : ''}
-${libs._requires ? libs._requires.join('\n') + '\n' : ''}
+template.es = (tpls, scripts, libs) => `${libs ? libs + '\n' : ''}
 class CoreClass {
   constructor() {
     this.tpls = {};
@@ -16,17 +15,19 @@ class CoreClass {
   }
 
   _initTpls() {
+    let $NODETPL = this;
     this.tpls = {
       ${tpls.join(',')}
     };
-    return this;
+    return $NODETPL;
   }
 
   _initScripts() {
+    let $NODETPL = this;
     this.scripts = {
       ${scripts.join(',')}
     };
-    return this;
+    return $NODETPL;
   }
 
   duid() {
@@ -35,6 +36,10 @@ class CoreClass {
 
   guid() {
     return 'nodetpl_g_' + this._generate();
+  }
+
+  escapeHtml(html) {
+    return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   render(data, guid) {
@@ -46,8 +51,7 @@ export default {
   render: data => new CoreClass().render(data)
 };`;
 
-template.commonjs = template.node = (tpls, scripts, libs) => `${libs._imports ? libs._imports.join('\n') + '\n' : ''}
-${libs._requires ? libs._requires.join('\n') + '\n' : ''}
+template.commonjs = template.node = (tpls, scripts, libs) => `${libs ? libs + '\n' : ''}
 class CoreClass {
   constructor() {
     this.tpls = {};
@@ -62,17 +66,19 @@ class CoreClass {
   }
 
   _initTpls() {
+    let $NODETPL = this;
     this.tpls = {
       ${tpls.join(',')}
     };
-    return this;
+    return $NODETPL;
   }
 
   _initScripts() {
+    let $NODETPL = this;
     this.scripts = {
       ${scripts.join(',')}
     };
-    return this;
+    return $NODETPL;
   }
 
   duid() {
@@ -81,6 +87,10 @@ class CoreClass {
 
   guid() {
     return 'nodetpl_g_' + this._generate();
+  }
+
+  escapeHtml(html) {
+    return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   render(data, guid) {
@@ -93,7 +103,7 @@ module.exports = {
 };`;
 
 template.amd = template.cmd = (tpls, scripts, libs) => `define(function(require, exports, module){
-  ${libs._requires ? libs._requires.join('\n') + '\n' : ''}
+  ${libs ? libs + '\n' : ''}
   class CoreClass {
     constructor() {
       this.tpls = {};
@@ -108,17 +118,19 @@ template.amd = template.cmd = (tpls, scripts, libs) => `define(function(require,
     }
 
     _initTpls() {
+      let $NODETPL = this;
       this.tpls = {
         ${tpls.join(',')}
       };
-      return this;
+      return $NODETPL;
     }
 
     _initScripts() {
+      let $NODETPL = this;
       this.scripts = {
         ${scripts.join(',')}
       };
-      return this;
+      return $NODETPL;
     }
 
     duid() {
@@ -127,6 +139,10 @@ template.amd = template.cmd = (tpls, scripts, libs) => `define(function(require,
 
     guid() {
       return 'nodetpl_g_' + this._generate();
+    }
+
+    escapeHtml(html) {
+      return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     render(data, guid) {
@@ -140,6 +156,7 @@ template.amd = template.cmd = (tpls, scripts, libs) => `define(function(require,
 });`;
 
 template.var = (tpls, scripts, libs) => `((nodetpl) => {
+  ${libs ? libs + '\n' : ''}
   class CoreClass {
     constructor() {
       this.tpls = {};
@@ -154,17 +171,19 @@ template.var = (tpls, scripts, libs) => `((nodetpl) => {
     }
 
     _initTpls() {
+      let $NODETPL = this;
       this.tpls = {
         ${tpls.join(',')}
       };
-      return this;
+      return $NODETPL;
     }
 
     _initScripts() {
+      let $NODETPL = this;
       this.scripts = {
         ${scripts.join(',')}
       };
-      return this;
+      return $NODETPL;
     }
 
     duid() {
@@ -173,6 +192,10 @@ template.var = (tpls, scripts, libs) => `((nodetpl) => {
 
     guid() {
       return 'nodetpl_g_' + this._generate();
+    }
+
+    escapeHtml(html) {
+      return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     render(data, guid) {
