@@ -3,7 +3,7 @@
 import template from './template';
 import css from './css';
 
-let version = '4.2.0';
+let version = '4.3.0';
 
 class NodeTplPlus {
   constructor(options) {
@@ -53,6 +53,7 @@ class NodeTplPlus {
       }
       return list;
     };
+    html = html.replace(/<!--[\w\W\r\n]*?-->/igm, ''); // annotation
     let list = getTemplate(html);
     for (let tplname in list) {
       if (!Object.prototype.hasOwnProperty.call(list, tplname)) {
@@ -136,7 +137,6 @@ class NodeTplPlus {
       let openTag = getTag(this.options.openTag);
       let closeTag = getTag(this.options.closeTag);
       let html;
-      content = content.split(/<!--[\s\S]*-->/g).join(''); // annotation
       html = content.split(new RegExp('(' + openTag + '[\\s\\S]*?' + closeTag + ')'));
       for (let i = 0; i < html.length; i++) {
         if (!html[i]) continue;
