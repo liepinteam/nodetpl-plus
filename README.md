@@ -1,7 +1,7 @@
 nodetpl-plus
 ===
 
-[![Build Status](https://secure.travis-ci.org/pillys/nodetpl-plus.png?branch=master)](https://travis-ci.org/pillys/nodetpl-plus)
+[![Build Status](https://secure.travis-ci.org/liepinteam/nodetpl-plus.png?branch=master)](https://travis-ci.org/liepinteam/nodetpl-plus)
 
 A powerful, efficient, easy to use, funny JavaScript template engine.
 
@@ -40,7 +40,7 @@ var result = new NodeTplPlus({
 
 ## Questions?
 
-If you have any questions, please feel free to ask through [New Issue](https://github.com/pillys/nodetpl-plus/issues/new).
+If you have any questions, please feel free to ask through [New Issue](https://github.com/liepinteam/nodetpl-plus/issues/new).
 
 ### License
 
