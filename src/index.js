@@ -3,7 +3,7 @@
 import template from './template';
 import css from './css';
 
-let version = '4.3.1';
+let version = '4.3.2';
 
 class NodeTplPlus {
   constructor(options) {
