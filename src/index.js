@@ -3,7 +3,7 @@
 import template from './template';
 import css from './css';
 
-let version = '4.3.3';
+let version = '4.3.5';
 
 class NodeTplPlus {
   constructor(options) {
@@ -156,18 +156,12 @@ class NodeTplPlus {
               html[i] = html[i].substring(1).trim();
             }
             eqhtml = safeeq ? '$NODETPL.escapeHtml(' + html[i] + ')' : '(' + html[i] + ')';
-            if (!/^\d/.test(html[i])) {
-              let vars = (/^(\(*)([a-zA-Z\d_\$\s\.]+)/.exec(html[i]) || [0, 0, ''])[2];
-              if (vars !== '') {
-                html[i] = '    if (typeof ' + vars + ' !== \'undefined\') {\n' +
-                  '      _ += (' + eqhtml + ');\n' +
-                  '    }\n';
-              } else {
-                html[i] = '    _ += (' + eqhtml + ');\n';
-              }
-            } else {
-              html[i] = '    _ += (' + eqhtml + ');\n';
-            }
+            html[i] = '    _eqstring = ' + eqhtml + ';\n' +
+              '    if (typeof _eqstring === \'undefined\') {\n' +
+              '      _ += \'\';\n' +
+              '    } else {\n' +
+              '      _ += _eqstring;\n' +
+              '    }\n';
           }
         } else {
           html[i] = '\n    _ += \'' + html[i]
@@ -184,7 +178,7 @@ class NodeTplPlus {
     //content = 'try{\n' +
     //  'with($DATA || {}){\n' + content.trim() + '\n}' +
     //  '} catch(e){ console.log(e.stack); }\n';
-    content = 'try{\n' + content.trim() + '\n} catch(e){ console.log(e.stack); }\n';
+    content = 'try{\nvar _eqstring;\n' + content.trim() + '\n} catch(e){ console.log(e.stack); }\n';
     return content;
   }
 
