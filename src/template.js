@@ -90,7 +90,7 @@ class CoreClass {
   }
 
   escapeHtml(html) {
-    return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return html ? html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;') : html;
   }
 
   render(data, guid) {
@@ -142,7 +142,7 @@ template.amd = template.cmd = (tpls, scripts, libs) => `define(function(require,
     }
 
     escapeHtml(html) {
-      return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return html ? html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;') : html;
     }
 
     render(data, guid) {
@@ -195,7 +195,7 @@ template.var = (tpls, scripts, libs) => `((nodetpl) => {
     }
 
     escapeHtml(html) {
-      return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return html ? html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;') : html;
     }
 
     render(data, guid) {
